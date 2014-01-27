@@ -2,7 +2,7 @@
   "name": "thelocknlol-checker-firefox",
   "title": "TheLockNLol Checker for Firefox",
   "id": "jid1-NhUdkhKZThQiPA",
-  "description": "a basic add-on",
+  "description": "Shows a notification when TheLockNLol uploads a Video or livestreams",
   "author": "WebFreak001",
   "license": "MPL 2.0",
   "version": "1.0.2"
