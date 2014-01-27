@@ -1,16 +1,9 @@
 var refreshRate = 5000, video = "1", livestream = "1", sound = "1", lastVideo = "";
+var note = false;
 
 function notify(title, description, link)
 {
-	console.log("[TheLockNLol Checker] Notification: " + title + " " + description);
-	var notification = new Notification(title, { "body": description, "icon": "koala48.png" });
-
-	notification.addEventListener("click", function ()
-	{
-		window.open(link);
-		notification.close();
-	});
-	window.setTimeout(function () { notification.close(); }, 10000);
+	self.port.emit("notify", title, description, link);
 }
 
 var isTwitchOnline = false;
@@ -23,6 +16,7 @@ function process()
 
 self.port.on("start-process-interval", function ()
 {
+	process();
 	console.log("[TheLockNLol Checker] Started checking");
 	window.setInterval(process, 5000);
 });
