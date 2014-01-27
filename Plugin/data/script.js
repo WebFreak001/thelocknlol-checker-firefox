@@ -45,8 +45,7 @@ self.port.on("receive-ext", function (a, v)
 			if (!isTwitchOnline)
 			{
 				notify("TheLockNLol livestreamt nun!", "TheLockNLol ist grade auf twitch.tv online gekommen! Klick mich um dorthin zu gelangen.", "http://www.twitch.tv/TheLockNLol");
-				if (sound == "1") document.write('<audio id="player" src="sfx.wav" >');
-				document.getElementById('player').play();
+				if (sound == "1") self.port.emit("playsound", "sfx.wav");
 			}
 			isTwitchOnline = true;
 		}

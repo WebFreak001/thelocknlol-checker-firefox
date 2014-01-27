@@ -1,6 +1,8 @@
 var data = require("sdk/self").data;
 var Request = require("sdk/request").Request;
 var ss = require("sdk/simple-storage");
+var notifications = require("sdk/notifications");
+var { Cc, Ci } = require("chrome");
 var pnl = require("sdk/panel").Panel({
 	width: 370,
 	height: 200,
@@ -52,17 +54,24 @@ var pg = require("sdk/page-mod").PageMod({
 
 			pageWorker.port.on("notify", function (t, d, l)
 			{
-				var notifications = require("sdk/notifications");
 				notifications.notify({
 					title: t,
 					text: d,
 					iconURL: data.url("koala48.png"),
-					data: l,
-					onClick: function (data)
+					onClick: function ()
 					{
-						require("sdk/windows").browserWindows.open({url: data});
+						require("sdk/windows").browserWindows.open({ url: l });
 					}
 				});
+			});
+
+			pageWorker.port.on("playsound", function (soundUrl)
+			{
+				var ios = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+				var sound = ios.newURI(data.url(soundUrl), null, null); 
+				var player = Cc["@mozilla.org/sound;1"].createInstance(Ci.nsISound);
+
+				player.play(sound);
 			});
 
 			pageWorker.port.emit("start-process-interval");
