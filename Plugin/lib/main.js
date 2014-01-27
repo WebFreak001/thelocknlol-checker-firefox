@@ -15,7 +15,24 @@ require("sdk/widget").Widget({
 });
 
 var pageWorker = require("sdk/page-worker").Page({
-	contentScript: require("sdk/self").data.url("script.js")
+	contentScriptFile: data.url("script.js")
 });
 
-pageWorker.port.emit("start");
+var pg = require("sdk/page-mod").PageMod({
+	include: ["*"],
+	contentScriptFile: data.url("script.js"),
+	onAttach: function (pageWorker)
+	{
+		pageWorker.port.on("get-value", function (a)
+		{
+			pageWorker.port.emit("give-value", a, ss.storage[a]);
+		});
+
+		pageWorker.port.on("set-value", function (a, v)
+		{
+			ss.storage[a] = v;
+		});
+
+		pageWorker.port.emit("start-process-interval");
+	}
+});

@@ -1,8 +1,4 @@
-if (!localStorage["refreshRate"]) localStorage["refreshRate"] = "5000";
-if (!localStorage['video']) localStorage['video'] = "1";
-if (!localStorage['livestream']) localStorage['livestream'] = "1";
-if (!localStorage['sound']) localStorage['sound'] = "1";
-if (!localStorage['lastVideo']) localStorage['lastVideo'] = "";
+var refreshRate = 5000, video = "1", livestream = "1", sound = "1", lastVideo = "";
 
 function notify(title, description, link)
 {
@@ -22,7 +18,7 @@ var isTwitchOnline = false;
 
 function checkTwitch()
 {
-	if (localStorage['livestream'] == "1")
+	if (livestream == "1")
 	{
 		if (window.XMLHttpRequest)
 		{
@@ -44,7 +40,7 @@ function checkTwitch()
 					if (!isTwitchOnline)
 					{
 						notify("TheLockNLol livestreamt nun!", "TheLockNLol ist grade auf twitch.tv online gekommen! Klick mich um dorthin zu gelangen.", "http://www.twitch.tv/TheLockNLol");
-						if (localStorage['sound'] == "1") document.write('<audio id="player" src="sfx.wav" >');
+						if (sound == "1") document.write('<audio id="player" src="sfx.wav" >');
 						document.getElementById('player').play();
 					}
 					isTwitchOnline = true;
@@ -58,7 +54,7 @@ function checkTwitch()
 
 function checkYoutube()
 {
-	if (localStorage['video'] == "1")
+	if (video == "1")
 	{
 		//http://gdata.youtube.com/feeds/api/users/TheLockNLol/uploads?max-results=10
 		if (window.XMLHttpRequest)
@@ -79,28 +75,38 @@ function checkYoutube()
 		{
 			var id = entries[i].getElementsByTagName("id")[0].childNodes[0].nodeValue;
 			var title = entries[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
-			if (id == localStorage['lastVideo']) break;
+			if (id == lastVideo) break;
 			notify("TheLockNLol hat ein neues Video hochgeladen!", title, "http://www.youtube.com/watch?v=" + id.substring(42));
 			if(lastID == "") lastID = id;
 		}
-		if(lastID != "") localStorage['lastVideo'] = lastID;
+		if(lastID != "") setValue("lastVideo", lastID);
 	}
 }
 
 function process()
 {
+	console.log("[TheLockNLol Checker] checking...");
 	checkTwitch();
 	checkYoutube();
-	var nextDelay = parseInt(localStorage["refreshRate"]);
-	console.log(nextDelay);
-	console.log("[TheLockNLol Checker] checking...");
-	window.setTimeout(process, nextDelay);
 }
 
-
-self.port.on("start", function ()
+self.port.on("start-process-interval", function ()
 {
-	alert("Started");
 	console.log("[TheLockNLol Checker] Started checking");
-	window.addEventListener("load", process);
+	window.setInterval(process, 5000);
+});
+
+function setValue(a, v)
+{
+	self.port.emit("set-value", a, v);
+	self.port.emit("get-value", a);
+}
+
+self.port.on("give-value", function (a, v)
+{
+	if (a == "refreshRate") refreshRate = v;
+	if (a == "video") video = v;
+	if (a == "livestream") livestream = v;
+	if (a == "sound") sound = v;
+	if (a == "lastVideo") lastVideo = v;
 });
