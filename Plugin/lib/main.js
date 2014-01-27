@@ -14,11 +14,6 @@ require("sdk/widget").Widget({
 	panel: pnl
 });
 
-pnl.port.on("example-click", function ()
-{
-	notify("Example", "this is a example", "http://www.google.com");
-});
-
 var pageWorker = require("sdk/page-worker").Page({
 	contentScript: require("sdk/self").data.url("script.js")
 });
