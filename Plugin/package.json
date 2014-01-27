@@ -1,9 +1,9 @@
 {
-  "name": "plugin",
-  "title": "Plugin",
+  "name": "thelocknlol-checker-firefox",
+  "title": "TheLockNLol Checker for Firefox",
   "id": "jid1-NhUdkhKZThQiPA",
   "description": "a basic add-on",
-  "author": "",
+  "author": "WebFreak001",
   "license": "MPL 2.0",
-  "version": "0.1"
+  "version": "1.0.1"
 }
