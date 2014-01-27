@@ -1,0 +1,7 @@
+body {
+	font-family: Arial;
+}
+
+label, input {
+	cursor: pointer;
+}
